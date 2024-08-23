@@ -1,0 +1,183 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nhaplieu"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@drawable/background_custom2">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Nút Back với icon -->
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="66dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/back_button"
+            android:src="@drawable/ic_back" />
+
+        <!-- Chiết Khấu -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Chiết Khấu"
+            android:textColor="@color/dark_background"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/txt_chietkhau"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/background_custom2"
+            android:hint="0.00"
+            android:inputType="numberDecimal"
+            android:padding="10dp"
+            android:textColor="#103C50"
+            android:textColorHint="@color/material_dynamic_neutral30" />
+
+        <!-- Giá Đơn Vị -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Giá Đơn Vị"
+            android:textSize="20sp"
+            android:textColor="@color/dark_background"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/txt_giadonvi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/background_custom2"
+            android:hint="0.00"
+            android:inputType="numberDecimal"
+            android:padding="10dp"
+            android:textColor="@color/dark_background"
+            android:textColorHint="@color/material_dynamic_neutral30" />
+
+        <!-- Mã Chi Tiết Đơn Hàng -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mã Chi Tiết Đơn Hàng"
+            android:textSize="20sp"
+            android:textColor="@color/dark_background"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/txt_machitiet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/background_custom2"
+            android:hint="Nhập mã"
+            android:inputType="number"
+            android:minHeight="48dp"
+            android:padding="10dp"
+            android:textColor="@color/dark_background"
+            android:textColorHint="@color/material_dynamic_neutral30"/>
+
+        <!-- Mã Đơn Hàng -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mã Đơn Hàng"
+            android:textSize="20sp"
+            android:textColor="@color/dark_background"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/txt_madonhang"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/background_custom2"
+            android:hint="Nhập mã"
+            android:inputType="number"
+            android:padding="10dp"
+            android:textColor="@color/dark_background"
+            android:textColorHint="@color/material_dynamic_neutral30" />
+
+        <!-- Mã Sản Phẩm -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mã Sản Phẩm"
+            android:textSize="20sp"
+            android:textColor="@color/dark_background"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/txt_masp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/background_custom2"
+            android:hint="Nhập mã"
+            android:inputType="number"
+            android:padding="10dp"
+            android:textColor="@color/dark_background"
+            android:textColorHint="@color/material_dynamic_neutral30"/>
+
+        <!-- Số Lượng -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Số Lượng"
+            android:textSize="20sp"
+            android:textColor="@color/dark_background"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/txt_soluong"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/background_custom2"
+            android:hint="0"
+            android:inputType="number"
+            android:padding="10dp"
+            android:textColor="@color/dark_background"
+            android:textColorHint="@color/material_dynamic_neutral30" />
+
+        <!-- LinearLayout chứa hai nút trên cùng một dòng -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="16dp">
+
+            <!-- Nút Gửi đơn hàng -->
+            <Button
+                android:id="@+id/ghinhan"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/purple_button_color"
+                android:text="Gửi đơn hàng"
+                android:textColor="@android:color/white" />
+
+            <!-- Nút Xem Thông Tin Đơn Hàng -->
+            <Button
+                android:id="@+id/btn_xemdonhang"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@color/purple_button_color"
+                android:text="Xem Thông Tin Đơn Hàng"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Define your colors here -->
+    <color name="dark_background">#1E1E1E</color> <!-- Dark background color -->
+    <color name="light_text_color">#D3D3D3</color> <!-- Light text color -->
+    <color name="white">#FFFFFF</color> <!-- White color -->
+    <color name="gray_text_color">#A0A0A0</color> <!-- Gray text color -->
+    <color name="purple_button_color">#6A0DAD</color> <!-- Purple button color -->
+    <color name="switch_thumb_color">#FFFFFF</color> <!-- Switch thumb color -->
+    <color name="switch_track_color">#6A0DAD</color> <!-- Switch track color -->
+    <color name="link_color">#0099FF</color> <!-- Link color -->
+</resources>

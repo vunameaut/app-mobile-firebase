@@ -1,0 +1,163 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nhaplieu"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_custom2"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="16dp">
+
+        <!-- Nút Back với icon -->
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="66dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/back_button"
+            android:src="@drawable/ic_back" />
+
+        <!-- Mã Đơn Hàng Nhập -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Nhập Mã Đơn Hàng"
+            android:textColor="@color/dark_background"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/edt_madonhang"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/background_custom2"
+            android:padding="10dp"
+            android:hint="Nhập mã đơn hàng"
+            android:textColorHint="@color/material_dynamic_neutral30" />
+
+        <!-- Chiết Khấu -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Chiết Khấu"
+            android:textColor="@color/dark_background"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txt_chietkhau"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/background_custom2"
+            android:padding="10dp"
+            android:text="loading..."
+            android:textColor="@color/dark_background"
+            android:textColorHint="@color/material_dynamic_neutral30" />
+
+        <!-- Giá Đơn Vị -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Giá Đơn Vị"
+            android:textColor="@color/dark_background"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txt_giadonvi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/background_custom2"
+            android:padding="10dp"
+            android:text="loading..."
+            android:textColor="@color/dark_background"
+            android:textColorHint="@color/material_dynamic_neutral30" />
+
+        <!-- Mã Chi Tiết Đơn Hàng -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Mã Chi Tiết Đơn Hàng"
+            android:textColor="@color/dark_background"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txt_machitiet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/background_custom2"
+            android:padding="10dp"
+            android:text="loading..."
+            android:textColor="@color/dark_background"
+            android:textColorHint="@color/material_dynamic_neutral30" />
+
+        <!-- Mã Đơn Hàng -->
+
+        <!-- Mã Sản Phẩm -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Mã Sản Phẩm"
+            android:textColor="@color/dark_background"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txt_masp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/background_custom2"
+            android:padding="10dp"
+            android:text="loading..."
+            android:textColor="@color/dark_background"
+            android:textColorHint="@color/material_dynamic_neutral30" />
+
+        <!-- Số Lượng -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Số Lượng"
+            android:textColor="@color/dark_background"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/txt_soluong"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/background_custom2"
+            android:padding="10dp"
+            android:text="loading..."
+            android:textColor="@color/dark_background"
+            android:textColorHint="@color/material_dynamic_neutral30" />
+
+        <!-- Nút Xem Thông Tin -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_xemdonhang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/purple_button_color"
+                android:text="Xem Thông Tin"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
