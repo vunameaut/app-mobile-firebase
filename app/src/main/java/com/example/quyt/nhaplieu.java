@@ -14,8 +14,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class nhaplieu extends AppCompatActivity {
 
@@ -67,6 +70,26 @@ public class nhaplieu extends AppCompatActivity {
         edtMachitiet = findViewById(R.id.txt_machitiet);
     }
 
+    private boolean isValidNumber(String value, String type) {
+        if (value == null || value.isEmpty()) {
+            return false;
+        }
+
+        try {
+            if (type.equals("int")) {
+                Integer.parseInt(value);
+            } else if (type.equals("double")) {
+                Double.parseDouble(value);
+            } else {
+                return false;
+            }
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+
     private void ghiNhanDuLieu() {
         String maChiTiet = edtMachitiet.getText().toString().trim();
         String maDonHang = edtMadonhang.getText().toString().trim();
@@ -82,34 +105,59 @@ public class nhaplieu extends AppCompatActivity {
             return;
         }
 
-        // Chuyển đổi và kiểm tra định dạng số
-        int soLuong;
-        double giaDonVi, chietKhau;
-        try {
-            soLuong = Integer.parseInt(soLuongStr);
-            giaDonVi = Double.parseDouble(giaDonViStr);
-            chietKhau = Double.parseDouble(chietKhauStr);
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Vui lòng nhập đúng định dạng số cho Số Lượng, Giá Đơn Vị và Chiết Khấu", Toast.LENGTH_SHORT).show();
+        // Kiểm tra định dạng số
+        if (!isValidNumber(soLuongStr, "int")) {
+            Toast.makeText(this, "Số Lượng phải là số nguyên hợp lệ", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!isValidNumber(giaDonViStr, "double")) {
+            Toast.makeText(this, "Giá Đơn Vị phải là số thực hợp lệ", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!isValidNumber(chietKhauStr, "double")) {
+            Toast.makeText(this, "Chiết Khấu phải là số thực hợp lệ", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Tạo đối tượng OrderDetail
-        OrderDetail orderDetail = new OrderDetail(maChiTiet, maDonHang, maSanPham, soLuong, giaDonVi, chietKhau);
+        // Chuyển đổi dữ liệu đã kiểm tra
+        int soLuong = Integer.parseInt(soLuongStr);
+        double giaDonVi = Double.parseDouble(giaDonViStr);
+        double chietKhau = Double.parseDouble(chietKhauStr);
 
-        // Ghi dữ liệu vào Firebase với maDonHang làm tên nút dữ liệu
+        // Kiểm tra sự tồn tại của mã đơn hàng
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("2/data");
-        databaseReference.child(maDonHang).setValue(orderDetail) // Thay đổi maChiTiet thành maDonHang
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(nhaplieu.this, "Dữ liệu đã được ghi nhận thành công!", Toast.LENGTH_SHORT).show();
-                    clearInputFields();
-                    Log.d("Firebase", "Ghi dữ liệu thành công cho mã đơn hàng: " + maDonHang);
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(nhaplieu.this, "Ghi dữ liệu thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e("Firebase", "Ghi dữ liệu thất bại: ", e);
-                });
+        databaseReference.child(maDonHang).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // ID đã tồn tại
+                    Toast.makeText(nhaplieu.this, "Mã đơn hàng đã tồn tại. Vui lòng chọn mã khác.", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Tạo đối tượng OrderDetail
+                    OrderDetail orderDetail = new OrderDetail(maChiTiet, maDonHang, maSanPham, soLuong, giaDonVi, chietKhau);
+
+                    // Ghi dữ liệu vào Firebase với maDonHang làm tên nút dữ liệu
+                    databaseReference.child(maDonHang).setValue(orderDetail)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(nhaplieu.this, "Dữ liệu đã được ghi nhận thành công!", Toast.LENGTH_SHORT).show();
+                                clearInputFields();
+                                Log.d("Firebase", "Ghi dữ liệu thành công cho mã đơn hàng: " + maDonHang);
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(nhaplieu.this, "Ghi dữ liệu thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Log.e("Firebase", "Ghi dữ liệu thất bại: ", e);
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(nhaplieu.this, "Lỗi khi kiểm tra dữ liệu: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("Firebase", "Lỗi kiểm tra dữ liệu: ", databaseError.toException());
+            }
+        });
     }
+
 
 
     private void clearInputFields() {
@@ -131,7 +179,7 @@ public class nhaplieu extends AppCompatActivity {
         public double chietKhau;
 
         public OrderDetail() {
-            // Constructor mặc định cần thiết cho Firebase
+
         }
 
         public OrderDetail(String maChiTiet, String maDonHang, String maSanPham, int soLuong, double giaDonVi, double chietKhau) {

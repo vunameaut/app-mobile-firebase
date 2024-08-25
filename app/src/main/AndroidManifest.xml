@@ -16,17 +16,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Quyt"
         tools:targetApi="31">
+
         <activity
             android:name=".xemdonhang"
             android:exported="false" />
         <activity
-            android:name=".nhaplieu"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".signup"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".nhaplieu"
+            android:theme="@style/Theme.Quyt.NoActionBar"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
