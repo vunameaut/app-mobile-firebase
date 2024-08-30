@@ -17,20 +17,28 @@
         android:theme="@style/Theme.Quyt"
         tools:targetApi="31">
 
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".xemdonhang"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".nhaplieu"
             android:exported="false" />
         <activity
             android:name=".signup"
             android:exported="false" />
         <activity
-            android:name=".nhaplieu"
-            android:theme="@style/Theme.Quyt.NoActionBar"
+            android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Quyt.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

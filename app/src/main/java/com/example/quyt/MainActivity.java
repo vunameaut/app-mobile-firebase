@@ -10,37 +10,37 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
+
     private EditText edt_tk, edt_mk;
     private Button btnDangNhap;
-
-
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Khởi tạo FirebaseAuth
+        mAuth = FirebaseAuth.getInstance();
+
         edt_tk = findViewById(R.id.edt_tk);
         edt_mk = findViewById(R.id.edt_mk);
         btnDangNhap = findViewById(R.id.signInButton);
         TextView signUpText = findViewById(R.id.signUpText);
 
+        // Đăng nhập khi bấm nút
         btnDangNhap.setOnClickListener(view -> dang_nhap());
+
+        // Điều hướng đến trang đăng ký
         signUpText.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, signup.class);
             startActivity(intent);
         });
-
-
     }
-
 
     public void dang_nhap() {
         String email = edt_tk.getText().toString().trim();
@@ -51,70 +51,28 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        Query query = FirebaseDatabase.getInstance().getReference("8/data")
-                .orderByChild("email")
-                .equalTo(email);
+        // Đăng nhập bằng Firebase Authentication
+        mAuth.signInWithEmailAndPassword(email, matKhau)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Đăng nhập thành công
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null && user.isEmailVerified()) {
+                            Toast.makeText(MainActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                            Log.d("LoginStatus", "Đăng nhập thành công");
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    boolean isLoggedIn = false;
-                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                        String matKhauFirebase = userSnapshot.child("matKhau").getValue(String.class);
-                        String trangThai = userSnapshot.child("trangThai").getValue(String.class);
-
-                        if (matKhauFirebase != null && matKhauFirebase.equals(matKhau)) {
-                            if ("active".equals(trangThai)) {
-                                Toast.makeText(MainActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-                                Log.d("LoginStatus", "Đăng nhập thành công");
-
-
-                                Intent intent = new Intent(MainActivity.this, nhaplieu.class);
-                                startActivity(intent);
-                                isLoggedIn = true;
-                                break;
-                            } else {
-                                Toast.makeText(MainActivity.this, "Tài khoản của bạn đã bị vô hiệu hóa.", Toast.LENGTH_SHORT).show();
-                                Log.e("LoginStatus", "Tài khoản bị vô hiệu hóa.");
-                                isLoggedIn = true;
-                                break;
-                            }
+                            // Điều hướng đến màn hình nhập liệu
+                            Intent intent = new Intent(MainActivity.this, nhaplieu.class);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(MainActivity.this, "Email chưa được xác minh. Vui lòng xác minh email của bạn.", Toast.LENGTH_SHORT).show();
+                            Log.e("LoginStatus", "Email chưa xác minh.");
                         }
+                    } else {
+                        // Đăng nhập thất bại
+                        Toast.makeText(MainActivity.this, "Đăng nhập thất bại: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("LoginStatus", "Đăng nhập thất bại", task.getException());
                     }
-                    if (!isLoggedIn) {
-                        Toast.makeText(MainActivity.this, "Mật khẩu không chính xác.", Toast.LENGTH_SHORT).show();
-                        Log.e("LoginStatus", "Mật khẩu không chính xác.");
-                    }
-                } else {
-                    Toast.makeText(MainActivity.this, "Tên đăng nhập không tồn tại.", Toast.LENGTH_SHORT).show();
-                    Log.e("LoginStatus", "Tên đăng nhập không tồn tại.");
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(MainActivity.this, "Đã xảy ra lỗi: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.e("LoginStatus", "Database error: " + databaseError.getMessage());
-            }
-        });
-    }
-
-
-    // Lớp User để đại diện cho dữ liệu người dùng
-    public static class User {
-        public String Email;
-        public String MatKhau;
-        public String TrangThai;
-
-        // Constructor mặc định cần thiết cho Firebase
-        public User() {
-        }
-
-        public User(String email, String matKhau, String trangThai) {
-            this.Email = email;
-            this.MatKhau = matKhau;
-            this.TrangThai = trangThai;
-        }
+                });
     }
 }

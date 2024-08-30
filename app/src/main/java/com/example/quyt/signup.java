@@ -1,6 +1,5 @@
 package com.example.quyt;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -8,30 +7,26 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class signup extends AppCompatActivity {
 
     private EditText edtUsername, edtEmail, edtPassword, edtConfirmPassword;
     private Button signUpButton;
     private TextView signInText;
+    private FirebaseAuth mAuth;
 
-
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+        // Khởi tạo FirebaseAuth
+        mAuth = FirebaseAuth.getInstance();
 
         edtUsername = findViewById(R.id.edt_username);
         edtEmail = findViewById(R.id.edt_email);
@@ -43,55 +38,10 @@ public class signup extends AppCompatActivity {
         // Xử lý sự kiện khi người dùng nhấn nút Sign Up
         signUpButton.setOnClickListener(v -> handleSignUp());
 
+        // Điều hướng trở lại màn hình đăng nhập
         signInText.setOnClickListener(view -> finish());
     }
 
-    public class User {
-        private String Email;
-        private String MaTaiKhoan;
-        private String MatKhau;
-        private String Ngaytao;
-        private String TenDangNhap;
-        private String TrangThai;
-        private String VaiTro;
-
-        public User(String Email, String MatKhau, String TenDangNhap) {
-            this.Email = Email;
-            this.MatKhau = MatKhau;
-            this.TenDangNhap = TenDangNhap;
-            this.MaTaiKhoan = FirebaseDatabase.getInstance().getReference().push().getKey(); // Tạo mã tài khoản tự động
-            this.Ngaytao = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date()); // Tạo ngày tạo tự động
-            this.TrangThai = "active";
-            this.VaiTro = "user";
-        }
-        public String getEmail() {
-            return Email;
-        }
-
-        public String getMaTaiKhoan() {
-            return MaTaiKhoan;
-        }
-
-        public String getMatKhau() {
-            return MatKhau;
-        }
-
-        public String getNgaytao() {
-            return Ngaytao;
-        }
-
-        public String getTenDangNhap() {
-            return TenDangNhap;
-        }
-
-        public String getTrangThai() {
-            return TrangThai;
-        }
-
-        public String getVaiTro() {
-            return VaiTro;
-        }
-    }
     private void handleSignUp() {
         String username = edtUsername.getText().toString().trim();
         String email = edtEmail.getText().toString().trim();
@@ -108,27 +58,42 @@ public class signup extends AppCompatActivity {
             return;
         }
 
-        // Tạo một đối tượng User để ghi vào Firebase
-        User user = new User(email, password, username);
-
-        FirebaseDatabase.getInstance().getReference("8/data")
-                .child(user.getMaTaiKhoan())  // Sử dụng MaTaiKhoan làm khóa chính
-                .setValue(user)
-                .addOnCompleteListener(task -> {
+        // Tạo tài khoản với email và mật khẩu bằng Firebase Authentication
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-                        Log.d("DatabaseWrite", "Dữ liệu đã được ghi thành công.");
-
-                        // Chuyển về màn hình đăng nhập
-                        finish();
+                        // Đăng ký thành công, cập nhật thông tin người dùng
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(username)  // Cập nhật tên hiển thị
+                                    .build();
+                            user.updateProfile(profileUpdates)
+                                    .addOnCompleteListener(updateTask -> {
+                                        if (updateTask.isSuccessful()) {
+                                            // Gửi email xác nhận
+                                            user.sendEmailVerification()
+                                                    .addOnCompleteListener(verifyTask -> {
+                                                        if (verifyTask.isSuccessful()) {
+                                                            Toast.makeText(signup.this, "Đăng ký thành công! Vui lòng xác nhận email của bạn.", Toast.LENGTH_SHORT).show();
+                                                            Log.d("UserProfile", "Thông tin người dùng đã được cập nhật.");
+                                                            finish();  // Quay lại màn hình đăng nhập
+                                                        } else {
+                                                            Toast.makeText(signup.this, "Gửi email xác nhận thất bại: " + verifyTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                            Log.e("UserProfile", "Gửi email xác nhận thất bại.", verifyTask.getException());
+                                                        }
+                                                    });
+                                        } else {
+                                            Toast.makeText(signup.this, "Cập nhật tên người dùng thất bại: " + updateTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                            Log.e("UserProfile", "Cập nhật tên người dùng thất bại.", updateTask.getException());
+                                        }
+                                    });
+                        }
                     } else {
-                        Toast.makeText(this, "Đăng ký thất bại!", Toast.LENGTH_SHORT).show();
-                        Log.e("DatabaseWrite", "Lỗi khi ghi dữ liệu: " + task.getException().getMessage());
+                        // Đăng ký thất bại
+                        Toast.makeText(signup.this, "Đăng ký thất bại: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("SignUp", "Đăng ký thất bại", task.getException());
                     }
                 });
     }
-
-
-
-
 }

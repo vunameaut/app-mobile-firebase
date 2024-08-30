@@ -34,7 +34,7 @@ public class nhaplieu extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_nhaplieu);
 
-        // Áp dụng Insets cho layout
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.nhaplieu), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -191,4 +191,5 @@ public class nhaplieu extends AppCompatActivity {
             this.chietKhau = chietKhau;
         }
     }
+
 }

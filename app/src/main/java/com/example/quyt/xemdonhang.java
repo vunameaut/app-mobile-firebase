@@ -112,7 +112,7 @@ public class xemdonhang extends AppCompatActivity {
         public double chietKhau;
 
         public OrderDetail() {
-            // Constructor mặc định cần thiết cho Firebase
+
         }
 
         public OrderDetail(String maChiTiet, String maDonHang, String maSanPham, int soLuong, double giaDonVi, double chietKhau) {
