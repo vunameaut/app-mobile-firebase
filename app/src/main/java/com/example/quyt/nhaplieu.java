@@ -1,8 +1,15 @@
 package com.example.quyt;
 
+
+import static android.app.PendingIntent.getActivity;
+
+import static java.security.AccessController.getContext;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -45,7 +52,14 @@ public class nhaplieu extends AppCompatActivity {
         initUI();
 
         // Sự kiện nút Back
-        back.setOnClickListener(view -> finish());
+//        back.setOnClickListener(view -> finish());
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(nhaplieu.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // Sự kiện nút Ghi Nhận
         btnGhiNhan.setOnClickListener(view -> ghiNhanDuLieu());
@@ -54,8 +68,10 @@ public class nhaplieu extends AppCompatActivity {
         btnXemDonHang.setOnClickListener(view -> {
             Intent intent = new Intent(nhaplieu.this, xemdonhang.class);
             startActivity(intent);
+
         });
     }
+
 
     private void initUI() {
         back = findViewById(R.id.btn_back);

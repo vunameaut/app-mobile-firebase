@@ -9,4 +9,5 @@
     <color name="switch_thumb_color">#FFFFFF</color> <!-- Switch thumb color -->
     <color name="switch_track_color">#6A0DAD</color> <!-- Switch track color -->
     <color name="link_color">#0099FF</color> <!-- Link color -->
+    <color name="black">#000000</color> <!-- Link color -->
 </resources>

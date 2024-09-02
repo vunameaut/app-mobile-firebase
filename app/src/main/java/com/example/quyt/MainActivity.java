@@ -1,8 +1,10 @@
 package com.example.quyt;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText edt_tk, edt_mk;
     private Button btnDangNhap;
     private FirebaseAuth mAuth;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +29,17 @@ public class MainActivity extends AppCompatActivity {
 
         // Khởi tạo FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
+
+        // Khởi tạo SharedPreferences
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+
+        // Kiểm tra trạng thái đăng nhập
+        if (sharedPreferences.getBoolean("isLoggedIn", false)) {
+            // Nếu đã đăng nhập, điều hướng đến màn hình home
+            Intent intent = new Intent(MainActivity.this, home.class);
+            startActivity(intent);
+            finish();
+        }
 
         edt_tk = findViewById(R.id.edt_tk);
         edt_mk = findViewById(R.id.edt_mk);
@@ -40,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, signup.class);
             startActivity(intent);
         });
+
+
     }
 
     public void dang_nhap() {
@@ -61,9 +77,16 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
                             Log.d("LoginStatus", "Đăng nhập thành công");
 
-                            // Điều hướng đến màn hình nhập liệu
-                            Intent intent = new Intent(MainActivity.this, nhaplieu.class);
+                            // Lưu trạng thái đăng nhập
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putBoolean("isLoggedIn", true);
+                            editor.putString("userEmail", email);
+                            editor.apply();
+
+                            // Điều hướng đến màn hình home
+                            Intent intent = new Intent(MainActivity.this, home.class);
                             startActivity(intent);
+                            finish();
                         } else {
                             Toast.makeText(MainActivity.this, "Email chưa được xác minh. Vui lòng xác minh email của bạn.", Toast.LENGTH_SHORT).show();
                             Log.e("LoginStatus", "Email chưa xác minh.");

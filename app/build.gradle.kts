@@ -39,7 +39,7 @@ android {
 dependencies {
 
 
-
+    implementation(libs.picasso)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.storage)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

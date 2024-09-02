@@ -12,6 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class signup extends AppCompatActivity {
 
@@ -19,6 +24,7 @@ public class signup extends AppCompatActivity {
     private Button signUpButton;
     private TextView signInText;
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +33,9 @@ public class signup extends AppCompatActivity {
 
         // Khởi tạo FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
+
+        // Khởi tạo DatabaseReference
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         edtUsername = findViewById(R.id.edt_username);
         edtEmail = findViewById(R.id.edt_email);
@@ -71,6 +80,9 @@ public class signup extends AppCompatActivity {
                             user.updateProfile(profileUpdates)
                                     .addOnCompleteListener(updateTask -> {
                                         if (updateTask.isSuccessful()) {
+                                            // Lưu thông tin người dùng vào Realtime Database
+                                            saveUserInformation(user.getUid(), username, email);
+
                                             // Gửi email xác nhận
                                             user.sendEmailVerification()
                                                     .addOnCompleteListener(verifyTask -> {
@@ -96,4 +108,25 @@ public class signup extends AppCompatActivity {
                     }
                 });
     }
+
+    private void saveUserInformation(String uid, String email, String username) {
+        // Tạo đối tượng để lưu thông tin người dùng
+        Map<String, String> user = new HashMap<>();
+        user.put("uid", uid);
+        user.put("username", username);
+        user.put("email", email);
+
+        // Lưu thông tin người dùng vào node "users" dưới khóa "username"
+        mDatabase.child("users").child(username).setValue(user)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d("Database", "Thông tin người dùng đã được lưu vào cơ sở dữ liệu.");
+                    } else {
+                        Log.e("Database", "Lưu thông tin người dùng thất bại.", task.getException());
+                    }
+                });
+    }
+
+
+
 }
